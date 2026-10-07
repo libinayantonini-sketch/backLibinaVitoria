@@ -7,7 +7,7 @@ from models.filmes import Filmes
 filmes_bp = Blueprint('filmes', __name__)
 
 
-# GET /filmes?titulo=matrix
+# Rota de pesquisa de filmes -- inicia uma única rota lógica para filmes fora do arquivo pincipal app.py
 @filmes_bp.route('/')
 def busca_filmes():
     titulo = request.args.get('titulo', '').strip()

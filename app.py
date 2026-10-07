@@ -11,6 +11,8 @@ app.json.ensure_ascii = False
 app.json.sort_keys = False
 app.teardown_appcontext(close_connection)
 
+# Indica onde fica a rota lógica e quando ela é acessada (prefix)
+
 app.register_blueprint(filmes_bp, url_prefix='/filmes')
 app.register_blueprint(usuarios_bp, url_prefix='/usuarios')
 
