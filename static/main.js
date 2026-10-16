@@ -49,13 +49,43 @@ function mostrar_filmes(filmes, mensagem_vazia) {
   });
 }
 
+function mostrar_pagina_filmes() {
+  div_resultado.innerHTML = "";
+
+  let inicio = (pagina_atual - 1) * filmes_por_pagina;
+  let fim = inicio + filmes_por_pagina;
+
+  let filmes_da_pagina = filmes_encontrados.slice(inicio, fim);
+
+  mostrar_filmes(filmes_da_pagina, "Nenhum filme encontrado.");
+
+  let total_paginas = Math.ceil(filmes_encontrados.length / filmes_por_pagina);
+  numero_pagina.textContent = `Página ${pagina_atual} de ${total_paginas}`;
+
+  botao_anterior.disabled = pagina_atual === 1;
+  botao_proxima.disabled = pagina_atual === total_paginas;
+}
+
+
 function mostrar_resposta(dados) {
   div_resultado.innerHTML = "";
 
   if (dados.erro) {
     div_resultado.appendChild(criar("p", dados.erro));
   } else if (dados.filmes) {
-    mostrar_filmes(dados.filmes, "Nenhum filme encontrado.");
+    filmes_encontrados = dados.filmes;
+    pagina_atual = 1;
+
+    if (filmes_encontrados.length > filmes_por_pagina) {
+      paginacao.style.display = "block";
+    } else {
+      paginacao.style.display = "none";
+    }
+
+    if (filmes_encontrados.length > 0) {
+      mostrar_pagina_filmes();
+    } else {
+      mostrar_filmes([], "Nenhum filme encontrado.");
   } else if (dados.usuarios) {
     if (dados.usuarios.length === 0) {
       div_resultado.appendChild(criar("p", "Nenhum usuário encontrado."));
@@ -99,4 +129,22 @@ botao_usuario.addEventListener("click", async function () {
       dados = await resposta.json();
 
   mostrar_resposta(dados);
+});
+
+botao_anterior.addEventListener("click", function () {
+  if (pagina_atual > 1) {
+    pagina_atual--;
+    mostrar_pagina_filmes();
+  }
+});
+
+botao_proxima.addEventListener("click", function () {
+  let total_paginas = Math.ceil(
+    filmes_encontrados.length / filmes_por_pagina
+  );
+
+  if (pagina_atual < total_paginas) {
+    pagina_atual++;
+    mostrar_pagina_filmes();
+  }
 });
