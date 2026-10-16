@@ -1,5 +1,14 @@
 let div_resultado = document.querySelector("#resultado");
 
+let filmes_encontrados = [];
+let pagina_atual = 1;
+let filmes_por_pagina = 5;
+
+let paginacao = document.querySelector("#paginacao");
+let botao_anterior = document.querySelector("#anterior");
+let botao_proxima = document.querySelector("#proxima");
+let numero_pagina = document.querySelector("#pagina");
+
 function criar(tag, texto) {
   let elemento = document.createElement(tag);
 
