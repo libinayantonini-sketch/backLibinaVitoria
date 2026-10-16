@@ -4,7 +4,7 @@ import mysql.connector
 from flask import g
 
 # gerencia a conexão com o banco de dados para acesso pelo models
-# pega as informações fornecidas no arquivo .env
+# pega as informações fornecidas no arquivo
 
 def get_connection():
     if 'db' not in g:
