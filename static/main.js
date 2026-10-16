@@ -83,7 +83,7 @@ function mostrar_resposta(dados) {
     filmes_encontrados = dados.filmes;
     pagina_atual = 1;
 
-    if (filmes_encontrados.length > 5) {
+    if (filmes_encontrados.length > filmes_por_pagina) {
       paginacao.style.display = "block";
     } else {
       paginacao.style.display = "none";
