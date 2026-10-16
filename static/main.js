@@ -4,7 +4,7 @@ let filmes_encontrados = [];
 let pagina_atual = 1;
 let filmes_por_pagina = 5;
 
-let paginacao = document.querySelector("#paginacao");
+let paginacao = document.querySelector("#paginação");
 let botao_anterior = document.querySelector("#anterior");
 let botao_proxima = document.querySelector("#proxima");
 let numero_pagina = document.querySelector("#pagina");
@@ -32,7 +32,12 @@ function criar_card(filme) {
 
   card.appendChild(criar("h3", filme.titulo + " (" + filme.ano + ")"));
   card.appendChild(criar("p", "Gêneros: " + filme.generos.join(", ")));
-  card.appendChild(criar("p", "Duração: " + filme.duracao + " min | Classificação: " + filme.classificacao));
+  card.appendChild(
+    criar(
+      "p",
+      "Duração: " + filme.duracao + " min | Classificação: " + filme.classificacao
+    )
+  );
   card.appendChild(criar("p", filme.sinopse));
 
   return card;
@@ -54,29 +59,31 @@ function mostrar_pagina_filmes() {
 
   let inicio = (pagina_atual - 1) * filmes_por_pagina;
   let fim = inicio + filmes_por_pagina;
-
   let filmes_da_pagina = filmes_encontrados.slice(inicio, fim);
 
   mostrar_filmes(filmes_da_pagina, "Nenhum filme encontrado.");
 
-  let total_paginas = Math.ceil(filmes_encontrados.length / filmes_por_pagina);
+  let total_paginas = Math.ceil(
+    filmes_encontrados.length / filmes_por_pagina
+  );
+
   numero_pagina.textContent = `Página ${pagina_atual} de ${total_paginas}`;
 
   botao_anterior.disabled = pagina_atual === 1;
   botao_proxima.disabled = pagina_atual === total_paginas;
 }
 
-
 function mostrar_resposta(dados) {
   div_resultado.innerHTML = "";
 
   if (dados.erro) {
     div_resultado.appendChild(criar("p", dados.erro));
+
   } else if (dados.filmes) {
     filmes_encontrados = dados.filmes;
     pagina_atual = 1;
 
-    if (filmes_encontrados.length > filmes_por_pagina) {
+    if (filmes_encontrados.length > 5) {
       paginacao.style.display = "block";
     } else {
       paginacao.style.display = "none";
@@ -86,33 +93,48 @@ function mostrar_resposta(dados) {
       mostrar_pagina_filmes();
     } else {
       mostrar_filmes([], "Nenhum filme encontrado.");
+    }
+
   } else if (dados.usuarios) {
     if (dados.usuarios.length === 0) {
-      div_resultado.appendChild(criar("p", "Nenhum usuário encontrado."));
+      div_resultado.appendChild(
+        criar("p", "Nenhum usuário encontrado.")
+      );
     }
 
     dados.usuarios.forEach(function (usuario) {
-      div_resultado.appendChild(criar("h2", "Favoritos de " + usuario.nome));
-      mostrar_filmes(usuario.favoritos, "Este usuário não tem favoritos.");
+      div_resultado.appendChild(
+        criar("h2", "Favoritos de " + usuario.nome)
+      );
+
+      mostrar_filmes(
+        usuario.favoritos,
+        "Este usuário não tem favoritos."
+      );
     });
   }
 }
 
-let input_titulo = document.querySelector("#titulo"),
-    botao_filme = document.querySelector("#buscar_filme"),
-    input_nome = document.querySelector("#nome"),
-    botao_usuario = document.querySelector("#buscar_usuario");
+let input_titulo = document.querySelector("#titulo");
+let botao_filme = document.querySelector("#buscar_filme");
+let input_nome = document.querySelector("#nome");
+let botao_usuario = document.querySelector("#buscar_usuario");
 
 botao_filme.addEventListener("click", async function () {
   let titulo = input_titulo.value.trim();
 
   if (titulo === "") {
-    mostrar_resposta({ erro: "Informe o título do filme." });
+    mostrar_resposta({
+      erro: "Informe o título do filme."
+    });
     return;
   }
 
-  let resposta = await fetch(`/filmes/?titulo=${encodeURIComponent(titulo)}`),
-      dados = await resposta.json();
+  let resposta = await fetch(
+    `/filmes/?titulo=${encodeURIComponent(titulo)}`
+  );
+
+  let dados = await resposta.json();
 
   mostrar_resposta(dados);
 });
@@ -121,12 +143,17 @@ botao_usuario.addEventListener("click", async function () {
   let nome = input_nome.value.trim();
 
   if (nome === "") {
-    mostrar_resposta({ erro: "Informe o nome do usuário." });
+    mostrar_resposta({
+      erro: "Informe o nome do usuário."
+    });
     return;
   }
 
-  let resposta = await fetch(`/usuarios/?nome=${encodeURIComponent(nome)}`),
-      dados = await resposta.json();
+  let resposta = await fetch(
+    `/usuarios/?nome=${encodeURIComponent(nome)}`
+  );
+
+  let dados = await resposta.json();
 
   mostrar_resposta(dados);
 });
