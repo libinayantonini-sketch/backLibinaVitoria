@@ -2,7 +2,7 @@ let div_resultado = document.querySelector("#resultado");
 
 let filmes_encontrados = [];
 let pagina_atual = 1;
-let filmes_por_pagina = 5;
+let filmes_por_pagina = 2;
 
 let paginacao = document.querySelector("#paginação");
 let botao_anterior = document.querySelector("#anterior");
